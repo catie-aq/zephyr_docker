@@ -10,15 +10,15 @@ jobs:
       image: ubuntu:latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          path: workdir
-
       - name: Install dependencies
         run: |
           apt-get update
           apt-get install -y curl jq git
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: workdir
 
       - name: Get latest tag from zephyrproject-rtos/docker-image
         id: get_latest_zephyr_tag

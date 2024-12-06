@@ -25,7 +25,6 @@ jobs:
           cd workdir
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git config --global pull.rebase true
 
       - name: Get latest tag from zephyrproject-rtos/docker-image
         id: get_latest_zephyr_tag
@@ -46,7 +45,14 @@ jobs:
           latest_zephyr_tag=${{ steps.get_latest_zephyr_tag.outputs.zephyr_tag }}
           sed -i "s|^FROM zephyrprojectrtos/ci:.*|FROM zephyrprojectrtos/ci:${latest_zephyr_tag}|" Dockerfile
           git add Dockerfile
-          git commit -m "Update Dockerfile to use zephyrprojectrtos/ci:${latest_zephyr_tag}"
-          git push origin main
           git tag $latest_zephyr_tag
-          git push origin $latest_zephyr_tag
+          git commit -m "Update Dockerfile to use zephyrprojectrtos/ci:${latest_zephyr_tag}"
+        
+      - name: Git push
+        if: steps.get_latest_zephyr_tag.outputs.zephyr_tag != steps.previous_tag.outputs.tag
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          tags: true
+          directory: workdir

@@ -2,8 +2,6 @@ name: Update Dockerfile and Tag
 
 on:
   push:
-    branches:
-      - main
 
 jobs:
   update-dockerfile:

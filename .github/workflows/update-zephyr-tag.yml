@@ -1,7 +1,8 @@
 name: Update Dockerfile and Tag
 
 on:
-  push:
+  schedule:
+    - cron: '0 0 * * MON'
 
 jobs:
   update-dockerfile:

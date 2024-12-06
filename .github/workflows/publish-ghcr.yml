@@ -2,6 +2,9 @@ name: Publish to GHCR
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -9,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-    publish:
-        uses: catie-aq/generic_workflows/.github/workflows/docker-ghcr.yml@main
-        secrets:
-            PAT: ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    uses: catie-aq/generic_workflows/.github/workflows/docker-ghcr.yml@main
+    secrets:
+      PAT: ${{ secrets.GITHUB_TOKEN }}

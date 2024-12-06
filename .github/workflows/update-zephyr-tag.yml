@@ -1,0 +1,51 @@
+name: Update Dockerfile and Tag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-dockerfile:
+    runs-on: sonu-github-arc
+    container:
+      image: ubuntu:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y curl jq git
+
+      - name: Get latest tag from zephyrproject-rtos/docker-image
+        id: get_latest_tag
+        run: |
+          latest_tag=$(curl -s https://api.github.com/repos/zephyrproject-rtos/docker-image/tags | jq -r '.[0].name')
+          echo "::set-output name=tag::$latest_tag"
+
+      - name: Update Dockerfile
+        run: |
+          latest_tag=${{ steps.get_latest_tag.outputs.tag }}
+          sed -i "s|^FROM zephyrprojectrtos/ci:.*|FROM zephyrprojectrtos/ci:${latest_tag}|" Dockerfile
+
+      # - name: Commit changes
+      #   run: |
+      #     git config --global user.name 'github-actions[bot]'
+      #     git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      #     git add Dockerfile
+      #     git commit -m "Update Dockerfile to use zephyrprojectrtos/ci:${{ steps.get_latest_tag.outputs.tag }}"
+
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@v0.6.0
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: main
+
+      # - name: Create new tag
+      #   run: |
+      #     latest_tag=${{ steps.get_latest_tag.outputs.tag }}
+      #     git tag $latest_tag
+      #     git push origin $latest_tag

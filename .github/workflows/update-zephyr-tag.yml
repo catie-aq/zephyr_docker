@@ -40,6 +40,7 @@ jobs:
           sed -i "s|^FROM zephyrprojectrtos/ci:.*|FROM zephyrprojectrtos/ci:${latest_zephyr_tag}|" Dockerfile
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global pull.rebase true
           git pull origin main
           git add Dockerfile
           git commit -m "Update Dockerfile to use zephyrprojectrtos/ci:${latest_zephyr_tag}"

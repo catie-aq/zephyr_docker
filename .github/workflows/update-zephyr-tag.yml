@@ -2,6 +2,8 @@ name: Update Dockerfile and Tag
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   update-dockerfile:
@@ -26,15 +28,12 @@ jobs:
           latest_zephyr_tag=$(curl -s https://api.github.com/repos/zephyrproject-rtos/docker-image/tags | jq -r '.[0].name')
           echo "::set-output name=zephyr_tag::$latest_zephyr_tag"
 
-      - name: Get latest tag from current repository
-        id: get_latest_current_tag
-        run: |
-          cd workdir
-          latest_current_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-          echo "::set-output name=current_tag::$latest_current_tag"
+      - name: Get Previous tag
+        id: previous_tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
 
       - name: Update Dockerfile, commit, push changes, and create new tag if necessary
-        if: steps.get_latest_zephyr_tag.outputs.zephyr_tag != steps.get_latest_current_tag.outputs.current_tag
+        if: steps.get_latest_zephyr_tag.outputs.zephyr_tag != steps.previous_tag.outputs.tag
         run: |
           cd workdir
           latest_zephyr_tag=${{ steps.get_latest_zephyr_tag.outputs.zephyr_tag }}

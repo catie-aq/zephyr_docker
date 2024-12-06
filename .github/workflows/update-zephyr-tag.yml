@@ -39,6 +39,13 @@ jobs:
           latest_zephyr_tag=${{ steps.get_latest_zephyr_tag.outputs.zephyr_tag }}
           sed -i "s|^FROM zephyrprojectrtos/ci:.*|FROM zephyrprojectrtos/ci:${latest_zephyr_tag}|" Dockerfile
 
+      # TODO: Use a GitHub App token to open a pull request, need admin access to the repository
+      # - uses: tibdex/github-app-token@v1
+      #   id: generate-token
+      #   with:
+      #     app_id: ${{ secrets.APP_ID }}
+      #     private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Open Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
@@ -48,4 +55,5 @@ jobs:
           commit-message: "Update Dockerfile to use zephyrprojectrtos/ci:${{ steps.get_latest_zephyr_tag.outputs.zephyr_tag }}"
           labels: dependencies
           delete-branch: true
+          # token: ${{ secrets.GITHUB_TOKEN }}
           reviewers: clementlgl

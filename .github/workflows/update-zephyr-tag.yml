@@ -29,6 +29,8 @@ jobs:
       - name: Get Previous tag
         id: previous_tag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          workingDirectory: workdir
 
       - name: Update Dockerfile, commit, push changes, and create new tag if necessary
         if: steps.get_latest_zephyr_tag.outputs.zephyr_tag != steps.previous_tag.outputs.tag

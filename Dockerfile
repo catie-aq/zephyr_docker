@@ -1,4 +1,4 @@
-FROM zephyrprojectrtos/ci:v0.26.18 as workspace 
+FROM zephyrprojectrtos/ci:v0.27.4 as workspace 
 
 RUN wget --post-data "accept_license_agreement=accepted" https://www.segger.com/downloads/jlink/JLink_Linux_V796c_x86_64.tgz \
     && mkdir -p /opt/SEGGER/JLink \
@@ -12,7 +12,7 @@ RUN west init -m https://github.com/catie-aq/6tron_zephyr-workspace --mr v3.7.0+
 WORKDIR /6tron-workspace
 RUN west update
 
-FROM zephyrprojectrtos/ci:v0.26.18
+FROM zephyrprojectrtos/ci:v0.27.4
 
 RUN wget --post-data "accept_license_agreement=accepted" https://www.segger.com/downloads/jlink/JLink_Linux_V796c_x86_64.tgz \
     && mkdir -p /opt/SEGGER/JLink \

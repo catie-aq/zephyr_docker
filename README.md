@@ -18,6 +18,11 @@ docker pull ghcr.io/catie-aq/zephyr_docker:main-workspace
 
 ## Version
 
+### v0.27.4 | v0.27.4-workspace
+- [Zephyr Image](https://hub.docker.com/r/zephyrprojectrtos/ci): v0.27.4
+- [6TRON manifest](https://github.com/catie-aq/zephyr_6tron-manifest): v3.7.0+202408
+- [JLink](https://www.segger.com/downloads/jlink/): V7.96c
+
 ### v0.26.18 | v0.26.18-workspace
 - [Zephyr Image](https://hub.docker.com/r/zephyrprojectrtos/ci): v0.26.18
 - [6TRON manifest](https://github.com/catie-aq/zephyr_6tron-manifest): v3.7.0+202408

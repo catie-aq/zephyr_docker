@@ -3,6 +3,7 @@ name: Update Dockerfile and Tag
 on:
   schedule:
     - cron: '0 0 * * MON'
+  workflow_dispatch:
 
 jobs:
   update-dockerfile:

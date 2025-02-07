@@ -3,7 +3,8 @@
 The image is based on [zephyrprojectrtos/ci](https://hub.docker.com/r/zephyrprojectrtos/ci) image and contains additional tools to develop with 6TRON.
 
 ## Tools
-- [JLink](https://www.segger.com/downloads/jlink/)
+- [JLink](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack)
+- [Ozone](https://www.segger.com/downloads/jlink/#Ozone)
 
 ## Usage
 Pull the image:

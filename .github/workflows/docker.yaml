@@ -5,7 +5,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  navigation-test:
+  pre-commit:
+    uses: catie-aq/generic_workflows/.github/workflows/pre-commit.yaml@main
+  check-dockerfile:
     uses: catie-aq/generic_workflows/.github/workflows/docker-test.yaml@main
     with:
       dockerfile: Dockerfile

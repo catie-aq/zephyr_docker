@@ -36,8 +36,8 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Python dependencies in a single RUN command
-RUN python3 -m pip install -U --no-cache-dir pip wheel setuptools && \
-    pip3 install --no-cache-dir pygobject && \
+RUN python3 -m pip install -U --no-cache-dir pip==25.0.1 wheel==0.45.1 setuptools==75.8.2 && \
+    pip3 install --no-cache-dir pygobject==3.42.1 && \
     pip3 install --no-cache-dir \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/main/scripts/requirements.txt \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/mcuboot/main/scripts/requirements.txt \

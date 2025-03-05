@@ -14,28 +14,21 @@ SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install base packages and multi-lib gcc (x86 only) in a single RUN command
-RUN apt-get -y update && \
-    apt-get install --no-install-recommends -y \
-    software-properties-common lsb-release autoconf automake bison build-essential \
-    ca-certificates ccache chrpath cmake cpio device-tree-compiler dfu-util diffstat \
-    dos2unix file flex g++ gawk gcc gcovr gdb git gnupg gperf help2man iproute2 \
-    lcov libcairo2-dev libglib2.0-dev liblocale-gettext-perl libncurses5-dev libpcap-dev \
-    libpopt0 libsdl1.2-dev libsdl2-dev libssl-dev libtool libtool-bin locales make net-tools \
-    ninja-build openssh-client parallel pkg-config python3-dev python3-pip python3-ply \
-    python3-setuptools python-is-python3 qemu rsync socat srecord sudo texinfo unzip valgrind \
-    wget ovmf xz-utils thrift-compiler \
-    $(if [ "${HOSTTYPE}" = "x86_64" ]; then echo "gcc-multilib g++-multilib"; fi) && \
-    if [ "${HOSTTYPE}" = "x86_64" ]; then \
-    dpkg --add-architecture i386 && \
+RUN dpkg --add-architecture i386 && \
     apt-get -y update && \
     apt-get install --no-install-recommends -y \
-    libsdl2-dev:i386 libfuse-dev:i386 libc6-dbg:i386; \
-    fi && \
+    software-properties-common lsb-release autoconf automake bison build-essential \
+    ca-certificates ccache chrpath cmake device-tree-compiler dfu-util \
+    dos2unix file flex g++ gawk gcc gcovr gdb git gnupg \
+    lcov libcairo2-dev libglib2.0-dev liblocale-gettext-perl libncurses5-dev libpcap-dev \
+    libpopt0 libsdl1.2-dev libsdl2-dev libssl-dev libtool libtool-bin locales make net-tools \
+    ninja-build parallel pkg-config python3-dev python3-pip python3-ply \
+    python3-setuptools python-is-python3 qemu rsync \
+    wget xz-utils thrift-compiler gcc-multilib g++-multilib libsdl2-dev:i386 libfuse-dev:i386 libc6-dbg:i386;\
     apt-get clean -y && \
     apt-get autoremove --purge -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install Python dependencies in a single RUN command
 RUN python3 -m pip install -U --no-cache-dir pip==25.0.1 wheel==0.45.1 setuptools==75.8.2 && \
     pip3 install --no-cache-dir pygobject==3.42.1 && \
     pip3 install --no-cache-dir \
@@ -49,7 +42,7 @@ RUN python3 -m pip install -U --no-cache-dir pip==25.0.1 wheel==0.45.1 setuptool
 # Install Zephyr SDK
 RUN mkdir -p /opt/toolchains
 WORKDIR /opt/toolchains
-RUN wget -q --show-progress --progress=bar:force:noscroll "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
+RUN wget -q --show-progress --progress=bar:force:noscroll https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
     tar xf zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
     /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/setup.sh -t arm-zephyr-eabi -h -c && \
     rm zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \

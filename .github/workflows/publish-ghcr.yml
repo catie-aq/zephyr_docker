@@ -10,10 +10,18 @@ concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  publish:
+  publish-ci:
     uses: catie-aq/generic_workflows/.github/workflows/docker-ghcr.yml@main
     secrets:
       PAT: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      target: ci
+  publish-dev:
+    uses: catie-aq/generic_workflows/.github/workflows/docker-ghcr.yml@main
+    secrets:
+      PAT: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      target: dev
   publish-workspace:
     uses: catie-aq/generic_workflows/.github/workflows/docker-ghcr.yml@main
     secrets:

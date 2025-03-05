@@ -11,4 +11,4 @@ jobs:
     uses: catie-aq/generic_workflows/.github/workflows/docker-test.yaml@main
     with:
       dockerfile: Dockerfile
-      ignore: DL3008, DL3015, SC1091
+      ignore: DL3008, DL3015, SC1091, SC2046

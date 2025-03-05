@@ -6,7 +6,6 @@ ARG UID=1000
 ARG GID=1000
 ARG ZSDK_VERSION=0.17.0
 ENV ZSDK_VERSION=$ZSDK_VERSION
-ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll"
 
 # Set default shell during Docker image build to bash
 SHELL ["/bin/bash", "-c"]
@@ -19,7 +18,7 @@ RUN apt-get -y update && \
     apt-get install --no-install-recommends -y \
     software-properties-common lsb-release autoconf automake bison build-essential \
     ca-certificates ccache chrpath cmake cpio device-tree-compiler dfu-util diffstat \
-    dos2unix doxygen file flex g++ gawk gcc gcovr gdb git gnupg gperf help2man iproute2 \
+    dos2unix file flex g++ gawk gcc gcovr gdb git gnupg gperf help2man iproute2 \
     lcov libcairo2-dev libglib2.0-dev liblocale-gettext-perl libncurses5-dev libpcap-dev \
     libpopt0 libsdl1.2-dev libsdl2-dev libssl-dev libtool libtool-bin locales make net-tools \
     ninja-build openssh-client parallel pkg-config python3-dev python3-pip python3-ply \
@@ -36,12 +35,6 @@ RUN apt-get -y update && \
     apt-get autoremove --purge -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Initialise system locale
-RUN locale-gen en_US.UTF-8
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US:en
-ENV LC_ALL=en_US.UTF-8
-
 # Install Python dependencies in a single RUN command
 RUN python3 -m pip install -U --no-cache-dir pip wheel setuptools && \
     pip3 install --no-cache-dir pygobject && \
@@ -53,31 +46,16 @@ RUN python3 -m pip install -U --no-cache-dir pip wheel setuptools && \
     if [ "${HOSTTYPE}" = "x86_64" ]; then pip3 check; fi && \
     rm -rf /root/.cache/pip
 
-# Create 'user' account
-RUN groupadd -g $GID -o user && \
-    useradd -u $UID -m -g user -G plugdev user && \
-    echo 'user ALL = NOPASSWD: ALL' > /etc/sudoers.d/user && \
-    chmod 0440 /etc/sudoers.d/user
-
-
 # Install Zephyr SDK
-RUN mkdir -p /opt/toolchains && \
-    cd /opt/toolchains && \
-    wget ${WGET_ARGS} https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
+RUN mkdir -p /opt/toolchains
+WORKDIR /opt/toolchains
+RUN wget -q --show-progress --progress=bar:force:noscroll "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
     tar xf zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
     /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/setup.sh -t arm-zephyr-eabi -h -c && \
     rm zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
     rm -rf /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/src/debug && \
     rm -rf /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/include
 
-USER user
-
-RUN sudo -E -- bash -c ' \
-    /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/setup.sh -c && \
-    chown -R user:user /home/user/.cmake \
-    '
-
-USER root
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
 ENV PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig

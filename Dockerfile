@@ -63,9 +63,6 @@ RUN wget -q --show-progress --progress=bar:force:noscroll https://github.com/zep
 
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
-ENV PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig
-ENV OVMF_FD_PATH=/usr/share/ovmf/OVMF.fd
-ENV ARMFVP_BIN_PATH=/usr/local/bin
 
 FROM ci as dev
 

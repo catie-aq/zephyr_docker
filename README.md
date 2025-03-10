@@ -2,6 +2,13 @@
 
 The image is based on [zephyrprojectrtos/ci](https://hub.docker.com/r/zephyrprojectrtos/ci) image and contains additional tools to develop with 6TRON.
 
+## Image Hierarchy
+
+The Docker images are organized in a hierarchical structure:
+- `zephyr_docker:main-ci`: Base image with Zephyr build tools
+- `zephyr_docker:main-dev`: Inherits from -ci, adds JLink and Ozone
+- `zephyr_docker:main-workspace`: Inherits from -dev, adds 6TRON workspace
+
 ## Tools
 
 - [JLink](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack)
@@ -25,6 +32,16 @@ docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix zephyr_
 ```
 
 ## Version
+
+### v4.0.0+202502
+
+- v4.0.0+202502-ci
+  - [Zephyr SDK](https://github.com/zephyrproject-rtos/sdk-ng/releases): v0.17.0
+- v4.0.0+202502-dev
+  - [JLink](https://www.segger.com/downloads/jlink/): V7.96c
+  - [Ozone](https://www.segger.com/downloads/jlink/): V3.38c
+- v4.0.0+202502-workspace
+  - [6TRON manifest](https://github.com/catie-aq/zephyr_6tron-manifest): v4.0.0+202502
 
 ### v0.27.4 | v0.27.4-workspace
 

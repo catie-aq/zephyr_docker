@@ -25,7 +25,7 @@ RUN dpkg --add-architecture i386 && \
     apt-get install --no-install-recommends -y \
     software-properties-common lsb-release autoconf automake bison build-essential \
     ca-certificates ccache chrpath cmake device-tree-compiler dfu-util \
-    dos2unix file flex g++ gawk gcc gcovr gdb git gnupg \
+    dos2unix file flex g++ gawk gcc gcovr gdb git gnupg gperf \
     lcov libcairo2-dev libglib2.0-dev liblocale-gettext-perl libncurses5-dev libpcap-dev \
     libpopt0 libsdl1.2-dev libsdl2-dev libssl-dev libtool libtool-bin locales make net-tools \
     ninja-build parallel pkg-config python3-dev python3-pip python3-ply \

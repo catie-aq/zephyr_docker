@@ -1,4 +1,4 @@
-name: Publish to GHCR
+name: Publish to GHCR CI and Dev images
 
 on:
   push:
@@ -22,9 +22,3 @@ jobs:
       PAT: ${{ secrets.GITHUB_TOKEN }}
     with:
       target: dev
-  publish-workspace:
-    uses: catie-aq/generic_workflows/.github/workflows/docker-ghcr.yml@main
-    secrets:
-      PAT: ${{ secrets.GITHUB_TOKEN }}
-    with:
-      target: workspace

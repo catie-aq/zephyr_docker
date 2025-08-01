@@ -1,0 +1,15 @@
+name: Publish to GHCR Workspace image
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+
+jobs:
+  publish-workspace:
+    uses: catie-aq/generic_workflows/.github/workflows/docker-ghcr.yml@main
+    secrets:
+      PAT: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      target: workspace

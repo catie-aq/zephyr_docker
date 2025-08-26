@@ -35,6 +35,12 @@ RUN dpkg --add-architecture i386 && \
     apt-get autoremove --purge -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Initialise system locale
+RUN locale-gen fr_FR.UTF-8
+ENV LANG=fr_FR.UTF-8
+ENV LANGUAGE=fr_FR:fr
+ENV LC_ALL=fr_FR.UTF-8
+
 RUN python3 -m pip install -U --no-cache-dir pip==25.0.1 wheel==0.45.1 setuptools==75.8.2 && \
     pip3 install --no-cache-dir pygobject==3.42.1 && \
     pip3 install --no-cache-dir \

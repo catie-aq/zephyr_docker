@@ -54,41 +54,41 @@ RUN python3 -m pip install -U --no-cache-dir pip==25.0.1 wheel==0.45.1 setuptool
 # Install protobuf-compiler
 RUN mkdir -p /opt/protoc
 WORKDIR /opt/protoc
-RUN	wget -q --show-progress --progress=bar:force:noscroll https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip && \
-	unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip && \
-	ln -s /opt/protoc/bin/protoc /usr/local/bin && \
-	rm -f protoc-${PROTOC_VERSION}-linux-x86_64.zip
+RUN	wget -q --show-progress --progress=bar:force:noscroll "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" && \
+    unzip "protoc-${PROTOC_VERSION}-linux-x86_64.zip" && \
+    ln -s /opt/protoc/bin/protoc /usr/local/bin && \
+    rm -f "protoc-${PROTOC_VERSION}-linux-x86_64.zip"
 
 # Install Zephyr SDK
 RUN mkdir -p /opt/toolchains
 WORKDIR /opt/toolchains
-RUN wget -q --show-progress --progress=bar:force:noscroll https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
-    tar xf zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
-    /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/setup.sh -t arm-zephyr-eabi -h -c && \
-    rm zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz && \
-    rm -rf /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/src/debug && \
-    rm -rf /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/include
+RUN wget -q --show-progress --progress=bar:force:noscroll "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
+    tar xf "zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
+    "/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/setup.sh" -t arm-zephyr-eabi -h -c && \
+    rm "zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
+    rm -rf "/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/src/debug" && \
+    rm -rf "/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/include"
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
 
 FROM ci as dev
 
-RUN wget -q --show-progress --progress=bar:force:noscroll --post-data "accept_license_agreement=accepted" https://www.segger.com/downloads/jlink/JLink_Linux_V${JLINK_VERSION}_x86_64.tgz \
+RUN wget -q --show-progress --progress=bar:force:noscroll --post-data "accept_license_agreement=accepted" "https://www.segger.com/downloads/jlink/JLink_Linux_V${JLINK_VERSION}_x86_64.tgz" \
     && mkdir -p /opt/SEGGER/JLink \
-    && tar -xvf JLink_Linux_V${JLINK_VERSION}_x86_64.tgz -C /opt/SEGGER/JLink \
-    && ln -s /opt/SEGGER/JLink/JLink_Linux_V${JLINK_VERSION}_x86_64/JLinkExe /usr/bin/JLinkExe \
+    && tar -xvf "JLink_Linux_V${JLINK_VERSION}_x86_64.tgz" -C /opt/SEGGER/JLink \
+    && ln -s "/opt/SEGGER/JLink/JLink_Linux_V${JLINK_VERSION}_x86_64/JLinkExe" /usr/bin/JLinkExe \
     && mkdir -p /etc/udev/rules.d \
-    && cp /opt/SEGGER/JLink/JLink_Linux_V${JLINK_VERSION}_x86_64/99-jlink.rules /etc/udev/rules.d/ \
-    && rm JLink_Linux_V${JLINK_VERSION}_x86_64.tgz
+    && cp "/opt/SEGGER/JLink/JLink_Linux_V${JLINK_VERSION}_x86_64/99-jlink.rules" /etc/udev/rules.d/ \
+    && rm "JLink_Linux_V${JLINK_VERSION}_x86_64.tgz"
 
-RUN wget -q --show-progress --progress=bar:force:noscroll --post-data "accept_license_agreement=accepted" https://www.segger.com/downloads/jlink/Ozone_Linux_V${OZONE_VERSION}_x86_64.tgz \
+RUN wget -q --show-progress --progress=bar:force:noscroll --post-data "accept_license_agreement=accepted" "https://www.segger.com/downloads/jlink/Ozone_Linux_V${OZONE_VERSION}_x86_64.tgz" \
     && mkdir -p /opt/SEGGER/Ozone \
-    && tar -xvf Ozone_Linux_V${OZONE_VERSION}_x86_64.tgz -C /opt/SEGGER/Ozone \
-    && ln -s /opt/SEGGER/Ozone/Ozone_Linux_V${OZONE_VERSION}_x86_64/Ozone /usr/bin/Ozone \
-    && rm Ozone_Linux_V${OZONE_VERSION}_x86_64.tgz
+    && tar -xvf "Ozone_Linux_V${OZONE_VERSION}_x86_64.tgz" -C /opt/SEGGER/Ozone \
+    && ln -s "/opt/SEGGER/Ozone/Ozone_Linux_V${OZONE_VERSION}_x86_64/Ozone" /usr/bin/Ozone \
+    && rm "Ozone_Linux_V${OZONE_VERSION}_x86_64.tgz"
 
 FROM dev as workspace
 
-RUN west init -m https://github.com/catie-aq/6tron_zephyr-workspace --mr ${WORKSPACE_VERSION}  /6tron-workspace
+RUN west init -m https://github.com/catie-aq/6tron_zephyr-workspace --mr "${WORKSPACE_VERSION}"  /6tron-workspace
 WORKDIR /6tron-workspace
 RUN west update

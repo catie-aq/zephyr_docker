@@ -1,6 +1,6 @@
 # Base Image
 
-FROM ubuntu:24.04 as ci
+FROM ubuntu:24.04 AS ci
 
 ARG ZSDK_VERSION=1.0.1
 ENV ZSDK_VERSION=$ZSDK_VERSION
@@ -28,9 +28,9 @@ RUN dpkg --add-architecture i386 && \
     dos2unix file flex g++ gawk gcc gcovr gdb git gnupg gperf \
     lcov libcairo2-dev libglib2.0-dev liblocale-gettext-perl libncurses5-dev libpcap-dev \
     libpopt0 libsdl1.2-dev libsdl2-dev libssl-dev libtool libtool-bin locales make net-tools \
-    ninja-build parallel pkg-config python3-dev python3-pip python3-ply \
-    python3-setuptools python-is-python3 qemu rsync unzip \
-    wget xz-utils thrift-compiler gcc-multilib g++-multilib libsdl2-dev:i386 libfuse-dev:i386 libc6-dbg:i386;\
+    parallel pkg-config python3-dev python3-pip python3-ply python3-venv \
+    python3-setuptools python-is-python3 rsync unzip \
+    wget xz-utils thrift-compiler gcc-multilib g++-multilib libsdl2-dev:i386 libfuse-dev:i386 libc6-dbg:i386; \
     apt-get clean -y && \
     apt-get autoremove --purge -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -71,7 +71,7 @@ RUN wget -q --show-progress --progress=bar:force:noscroll "https://github.com/ze
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT=zephyr
 
-FROM ci as dev
+FROM ci AS dev
 
 RUN wget -q --show-progress --progress=bar:force:noscroll --post-data "accept_license_agreement=accepted" "https://www.segger.com/downloads/jlink/JLink_Linux_V${JLINK_VERSION}_x86_64.tgz" \
     && mkdir -p /opt/SEGGER/JLink \
@@ -87,7 +87,7 @@ RUN wget -q --show-progress --progress=bar:force:noscroll --post-data "accept_li
     && ln -s "/opt/SEGGER/Ozone/Ozone_Linux_V${OZONE_VERSION}_x86_64/Ozone" /usr/bin/Ozone \
     && rm "Ozone_Linux_V${OZONE_VERSION}_x86_64.tgz"
 
-FROM dev as workspace
+FROM dev AS workspace
 
 RUN west init -m https://github.com/catie-aq/6tron_zephyr-workspace --mr "${WORKSPACE_VERSION}"  /6tron-workspace
 WORKDIR /6tron-workspace

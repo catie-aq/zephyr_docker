@@ -33,6 +33,15 @@ docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix zephyr_
 
 ## Version
 
+### v4.4.0+202605
+- v4.4.0+202605-ci
+  - [Zephyr SDK](https://github.com/zephyrproject-rtos/sdk-ng/releases): v1.0.1
+- v4.4.0+202605-dev
+  - [JLink](https://www.segger.com/downloads/jlink/): V9.38a
+  - [Ozone](https://www.segger.com/downloads/jlink/): V3.40h
+- v4.4.0+202605-workspace
+  - [6TRON manifest](https://github.com/catie-aq/zephyr_6tron-manifest): v4.4.0+202605
+
 ### v4.3.0+202511
 
 - v4.3.0+202511-ci

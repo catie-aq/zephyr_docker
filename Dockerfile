@@ -1,10 +1,10 @@
 # Base Image
 
-FROM ubuntu:22.04 as ci
+FROM ubuntu:24.04 as ci
 
-ARG ZSDK_VERSION=0.17.4
+ARG ZSDK_VERSION=1.0.1
 ENV ZSDK_VERSION=$ZSDK_VERSION
-ARG WORKSPACE_VERSION=v4.3.0+202511
+ARG WORKSPACE_VERSION=v4.4.0+202605
 ENV WORKSPACE_VERSION=$WORKSPACE_VERSION
 ARG PROTOC_VERSION=21.7
 ENV PROTOC_VERSION=$PROTOC_VERSION
@@ -41,13 +41,13 @@ ENV LANG=fr_FR.UTF-8
 ENV LANGUAGE=fr_FR:fr
 ENV LC_ALL=fr_FR.UTF-8
 
-RUN python3 -m pip install -U --no-cache-dir pip==25.0.1 wheel==0.45.1 setuptools==75.8.2 && \
-    pip3 install --no-cache-dir pygobject==3.42.1 && \
+RUN python3 -m pip install -U --no-cache-dir pip==26.0.1 wheel==0.46.3 setuptools==80.10.2 && \
     pip3 install --no-cache-dir \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/main/scripts/requirements.txt \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/mcuboot/main/scripts/requirements.txt \
+    -r https://raw.githubusercontent.com/zephyrproject-rtos/trusted-firmware-m/zephyr_tf-m_v2.2.2/tools/requirements.txt \
     GitPython imgtool junitparser junit2html numpy protobuf PyGithub pylint sh statistics west \
-    nrf-regtool~=7.0.0 && \
+    nrf-regtool~=9.0.1 && \
     if [ "${HOSTTYPE}" = "x86_64" ]; then pip3 check; fi && \
     rm -rf /root/.cache/pip
 

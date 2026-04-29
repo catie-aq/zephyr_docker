@@ -41,14 +41,20 @@ ENV LANG=fr_FR.UTF-8
 ENV LANGUAGE=fr_FR:fr
 ENV LC_ALL=fr_FR.UTF-8
 
-RUN python3 -m pip install -U --no-cache-dir pip==26.0.1 wheel==0.46.3 setuptools==80.10.2 && \
-    pip3 install --no-cache-dir \
+ENV PYTHON_VENV_PATH=/opt/python-venv
+ENV PATH=${PYTHON_VENV_PATH}/bin:${PATH}
+
+RUN mkdir -p ${PYTHON_VENV_PATH} && \
+    python3 -m venv ${PYTHON_VENV_PATH} && \
+    source ${PYTHON_VENV_PATH}/bin/activate && \
+    python -m pip install -U --no-cache-dir pip==26.0.1 wheel==0.46.3 setuptools==80.10.2 && \
+    pip install --no-cache-dir \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/main/scripts/requirements.txt \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/mcuboot/main/scripts/requirements.txt \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/trusted-firmware-m/zephyr_tf-m_v2.2.2/tools/requirements.txt \
     GitPython imgtool junitparser junit2html numpy protobuf PyGithub pylint sh statistics west \
     nrf-regtool~=9.0.1 && \
-    if [ "${HOSTTYPE}" = "x86_64" ]; then pip3 check; fi && \
+    if [ "${HOSTTYPE}" = "x86_64" ]; then pip check; fi && \
     rm -rf /root/.cache/pip
 
 # Install protobuf-compiler

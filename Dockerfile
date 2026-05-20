@@ -12,6 +12,8 @@ ARG JLINK_VERSION=938a
 ENV JLINK_VERSION=$JLINK_VERSION
 ARG OZONE_VERSION=340h
 ENV OZONE_VERSION=$OZONE_VERSION
+ARG KITWARE_NINJA_VERSION=1.11.1.g95dee.kitware.jobserver-1
+ENV KITWARE_NINJA_VERSION=$KITWARE_NINJA_VERSION
 
 # Set default shell during Docker image build to bash
 SHELL ["/bin/bash", "-c"]
@@ -56,6 +58,18 @@ RUN mkdir -p ${PYTHON_VENV_PATH} && \
     nrf-regtool~=9.0.1 && \
     if [ "${HOSTTYPE}" = "x86_64" ]; then pip check; fi && \
     rm -rf /root/.cache/pip
+
+# Make Zephyr Python virtual environment available globally
+ENV PATH=${PYTHON_VENV_PATH}/bin:$PATH
+
+# Install Kitware ninja
+RUN <<EOF
+	NINJA_BASENAME=ninja-${KITWARE_NINJA_VERSION}_${HOSTTYPE}-linux-gnu
+	wget ${WGET_ARGS} https://github.com/Kitware/ninja/releases/download/v${KITWARE_NINJA_VERSION}/${NINJA_BASENAME}.tar.gz
+	tar xf ${NINJA_BASENAME}.tar.gz -C /opt
+	ln -s /opt/${NINJA_BASENAME}/ninja /usr/local/bin
+	rm ${NINJA_BASENAME}.tar.gz
+EOF
 
 # Install protobuf-compiler
 RUN mkdir -p /opt/protoc

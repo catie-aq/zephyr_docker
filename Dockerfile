@@ -14,6 +14,8 @@ ARG OZONE_VERSION=340h
 ENV OZONE_VERSION=$OZONE_VERSION
 ARG KITWARE_NINJA_VERSION=1.11.1.g95dee.kitware.jobserver-1
 ENV KITWARE_NINJA_VERSION=$KITWARE_NINJA_VERSION
+ARG CCACHE_VERSION=4.13.2
+ENV CCACHE_VERSION=$CCACHE_VERSION
 
 # Set default shell during Docker image build to bash
 SHELL ["/bin/bash", "-c"]
@@ -26,7 +28,7 @@ RUN dpkg --add-architecture i386 && \
     apt-get -y update && \
     apt-get install --no-install-recommends -y \
     software-properties-common lsb-release autoconf automake bison build-essential \
-    ca-certificates ccache chrpath cmake device-tree-compiler dfu-util \
+    ca-certificates chrpath cmake device-tree-compiler dfu-util \
     dos2unix file flex g++ gawk gcc gcovr gdb git gnupg gperf \
     lcov libcairo2-dev libglib2.0-dev liblocale-gettext-perl libncurses5-dev libpcap-dev \
     libpopt0 libsdl1.2-dev libsdl2-dev libssl-dev libtool libtool-bin locales make net-tools \
@@ -61,6 +63,15 @@ RUN mkdir -p ${PYTHON_VENV_PATH} && \
 
 # Make Zephyr Python virtual environment available globally
 ENV PATH=${PYTHON_VENV_PATH}/bin:$PATH
+
+# Install ccache
+RUN <<EOF
+	CCACHE_BASENAME=ccache-${CCACHE_VERSION}-linux-${HOSTTYPE}-glibc
+	wget ${WGET_ARGS} https://github.com/ccache/ccache/releases/download/v${CCACHE_VERSION}/${CCACHE_BASENAME}.tar.xz
+	tar xf ${CCACHE_BASENAME}.tar.xz -C /opt
+	ln -s /opt/${CCACHE_BASENAME}/ccache /usr/local/bin
+	rm ${CCACHE_BASENAME}.tar.xz
+EOF
 
 # Install Kitware ninja
 RUN <<EOF

@@ -50,7 +50,7 @@ ENV PATH=${PYTHON_VENV_PATH}/bin:${PATH}
 
 RUN mkdir -p ${PYTHON_VENV_PATH} && \
     python3 -m venv ${PYTHON_VENV_PATH} && \
-    source ${PYTHON_VENV_PATH}/bin/activate && \
+    . ${PYTHON_VENV_PATH}/bin/activate && \
     python -m pip install -U --no-cache-dir pip==26.0.1 wheel==0.46.3 setuptools==80.10.2 && \
     pip install --no-cache-dir \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/main/scripts/requirements.txt \
@@ -58,7 +58,7 @@ RUN mkdir -p ${PYTHON_VENV_PATH} && \
     -r https://raw.githubusercontent.com/zephyrproject-rtos/trusted-firmware-m/zephyr_tf-m_v2.2.2/tools/requirements.txt \
     GitPython imgtool junitparser junit2html numpy protobuf PyGithub pylint sh statistics west \
     nrf-regtool~=9.0.1 && \
-    if [ "${HOSTTYPE}" = "x86_64" ]; then pip check; fi && \
+    if [ "$(uname -m)" = "x86_64" ]; then pip check; fi && \
     rm -rf /root/.cache/pip
 
 # Make Zephyr Python virtual environment available globally
@@ -93,10 +93,10 @@ RUN	wget -q --show-progress --progress=bar:force:noscroll "https://github.com/pr
 # Install Zephyr SDK
 RUN mkdir -p /opt/toolchains
 WORKDIR /opt/toolchains
-RUN wget -q --show-progress --progress=bar:force:noscroll "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
-    tar xf "zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
+RUN wget -q --show-progress --progress=bar:force:noscroll "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-$(uname -m)_minimal.tar.xz" && \
+    tar xf "zephyr-sdk-${ZSDK_VERSION}_linux-$(uname -m)_minimal.tar.xz" && \
     "/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/setup.sh" -t arm-zephyr-eabi -h -c && \
-    rm "zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}_minimal.tar.xz" && \
+    rm "zephyr-sdk-${ZSDK_VERSION}_linux-$(uname -m)_minimal.tar.xz" && \
     rm -rf "/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/src/debug" && \
     rm -rf "/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}/sysroots/x86_64-pokysdk-linux/usr/include"
 
